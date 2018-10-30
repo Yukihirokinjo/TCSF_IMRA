@@ -210,8 +210,9 @@ $ IMRA-2.2.bash  -ref ref_contigs.fasta -inF input_read_1.fastq -inR input_read_
 --------------------------------------------------------------------------------
 
 
+## 4. References
 
-
+Kinjo Y, Saitoh S, Tokuda G. 2015. An efficient strategy developed for next-generation sequencing of endosymbiont genomes performed using crude DNA isolated from host tissues: a case study of Blattabacterium cuenoti inhabiting the fat bodies of cockroaches. Microbes Environ. 30(3):208–220.
 
 
 
