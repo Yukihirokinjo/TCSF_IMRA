@@ -23,7 +23,7 @@ while [ "$#" -gt 0 ]
 do
 	case "$1" in
 		'-v' | '-version' )
-			echo "$version" 
+			echo "$version"
 			exit 1
 			;;
 		'-h' | '-help' )
@@ -35,7 +35,7 @@ do
 				exit 1
 			else
 				if  [ -e "$2" ]; then
-					in_contigs="$2" 
+					in_contigs="$2"
 					shift 2
 				else
 					echo " File $2 is not found " 1>&2
@@ -49,7 +49,7 @@ do
 				exit 1
 			else
 				if  [ -e "$2"   ]; then
-					ref_B="$2" 
+					ref_B="$2"
 					shift 2
 				else
 					echo " File $2 is not found " 1>&2
@@ -63,7 +63,7 @@ do
 				exit 1
 			else
 				if  [ -e "$2"   ]; then
-					ref_M="$2" 
+					ref_M="$2"
 					shift 2
 				else
 					echo " File $2 is not found " 1>&2
@@ -77,7 +77,7 @@ do
 				exit 1
 			else
 				if  [ -e "$2"   ]; then
-					ref_R="$2" 
+					ref_R="$2"
 					shift 2
 				else
 					echo " File $2 is not found " 1>&2
@@ -91,7 +91,7 @@ do
 				exit 1
 			else
 				if  [ ! -e "$2"  ]; then
-					out_dir="$2" 
+					out_dir="$2"
 					shift 2
 				elif [ -e "$2" ] || [ -d "$2" ]; then
 					echo "The specified output directory is already exist"
@@ -102,7 +102,7 @@ do
 									rm -r ./"$2"
 									;;
 								n)
-									printf "\nExit out of the IMRA\n\n" 
+									printf "\nExit out of the IMRA\n\n"
 									exit 1
 									;;
 								*)
@@ -119,7 +119,7 @@ do
 				exit 1
 			else
 				if  [ `expr "$2" : "[0-9]*$"` -gt 0  ]; then
-					cpu="$2" 
+					cpu="$2"
 					shift 2
 				else
 					echo " Argument with option $1 should be an integer " 1>&2
@@ -127,13 +127,13 @@ do
 				fi
 			fi
 			;;
-		'-w')
+		'-w' | '-w1' )
 			if [ -z "$2" ]; then
 				echo "PROGRAM: option requires an argument -- $1" 1>&2
 				exit 1
 			else
 				if  [ `expr "$2" : "[0-9]*$"` -gt 0  ]; then
-					w_size="$2" 
+					w_size="$2"
 					shift 2
 				else
 					echo " Argument with option $1 should be an integer " 1>&2
@@ -141,6 +141,20 @@ do
 				fi
 			fi
 			;;
+		'-w2')
+				if [ -z "$2" ]; then
+					echo "PROGRAM: option requires an argument -- $1" 1>&2
+					exit 1
+				else
+					if  [ `expr "$2" : "[0-9]*$"` -gt 0  ]; then
+						w_size2="$2"
+						shift 2
+					else
+						echo " Argument with option $1 should be an integer " 1>&2
+						exit 1
+					fi
+				fi
+				;;
 		'-e1')
 			if [ -z "$2" ]; then
 				echo "PROGRAM: option requires an argument -- $1" 1>&2
@@ -151,7 +165,7 @@ do
 					e_val_t=$2
 					shift 2
 				elif	[ `echo "$2 >= 0" | bc -l` -eq 1 ]; then
-					e_val_t=`echo $2 | bc -l` 
+					e_val_t=`echo $2 | bc -l`
 					shift 2
 				else
 					echo " Argument with option $1 should be a positive real number " 1>&2
@@ -169,7 +183,7 @@ do
 					e_val_n=$2
 					shift 2
 				elif	[ `echo "$2 >= 0" | bc -l` -eq 1 ]; then
-					e_val_n=`echo $2 | bc -l` 
+					e_val_n=`echo $2 | bc -l`
 					shift 2
 				else
 					echo " Argument with option $1 should be a positive real number " 1>&2
@@ -178,7 +192,7 @@ do
 			fi
 			;;
 		'-remove')
-			Remv="on"
+				Remv="on"
 			echo "[Remove mode]"
 			shift 1
 			;;
@@ -253,12 +267,12 @@ fi
 
 if [ $ref_R ]; then
 	cp $ref_R  ${out_dir}/DB/TCSF_FilterRNA.fna
-	
+
 	makeblastdb \
 		-in		${out_dir}/DB/TCSF_FilterRNA.fna \
 		-dbtype		nucl \
 		-hash_index
-	
+
 	if [ "$?" -ne 0 ]; then
 		echo "[Error] Blast+ failed. Please check the Messages avobe" 1>&2
 		exit 1
@@ -327,6 +341,7 @@ else
       -query		"$in_contigs"  \
       -evalue		${e_val_t:=1e-12}  \
       -max_target_seqs 1 \
+      -max_hsps 1 \
       -word_size	${w_size:=11} \
       -num_threads	${cpu:=1} \
       -outfmt		6  \
@@ -369,7 +384,7 @@ else
     fi
   fi
 echo "Blast parameters"
-echo "eval      = $eval_t"
+echo "Eval      = $eval_t"
 echo "word_size = $w_size"
 echo "num cpu   = $cpu"
 fi
@@ -381,6 +396,7 @@ if [ $ref_R ]; then
 		-query		"$in_contigs"  \
 		-max_target_seqs 1 \
 		-evalue		${e_val_n:=1e-12} \
+		-word_size	${w_size2:=11} \
 		-num_threads	${cpu:=1} \
 		-outfmt		6 \
 		-out		${out_dir}/Contig_list/Out_R.txt
@@ -423,21 +439,21 @@ awk '/^>/{print $1}' $ref_B | sed -e 's/>//g' > ${out_dir}/refBnames.txt
 
 if [ $ref_M ]; then
 	awk '/^>/{print $1}' $ref_M | sed -e 's/>//g' > ${out_dir}/refMnames.txt
-	while read line ; do 
-	awk -v name=$line '$2 == name {print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt | 
+	while read line ; do
+	awk -v name=$line '$2 == name {print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt |
 		sort >> ${out_dir}/Contig_list/list_B.txt
 	done < ${out_dir}/refBnames.txt
 
-	while read line ; do 
-	awk -v name=$line '$2 == name {print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt | 
+	while read line ; do
+	awk -v name=$line '$2 == name {print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt |
 		sort >> ${out_dir}/Contig_list/list_M.txt
 	done < ${out_dir}/refMnames.txt
 else
-	while read line ; do 
-	awk -v name=$line '$2 == name {print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt | 
+	while read line ; do
+	awk -v name=$line '$2 == name {print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt |
 		sort >> ${out_dir}/Contig_list/list_B.txt
 	done < ${out_dir}/refBnames.txt
-#	awk '{print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt > ${out_dir}/Contig_list/list_B.txt 
+#	awk '{print $1}' ${out_dir}/Contig_list/Blast_out_BM.txt > ${out_dir}/Contig_list/list_B.txt
 fi
 	if [ "$?" -ne 0 ]; then
 		echo "[Error] Generate Contig lists failed. Please check the Messages avobe" 1>&2
@@ -455,7 +471,7 @@ if [ $ref_R ]; then
 		grep -v -f ${out_dir}/Contig_list/list_R.txt  ${out_dir}/Contig_list/list_B.txt > ${out_dir}/Contig_list/TCSF_list.txt
 	else
 		cat ${out_dir}/Contig_list/list_B.txt > ${out_dir}/Contig_list/TCSF_list.txt
-	fi	
+	fi
 else
 	cat ${out_dir}/Contig_list/list_B.txt > ${out_dir}/Contig_list/TCSF_list.txt
 fi
@@ -501,6 +517,3 @@ printf  "\n ---------------------------- Run Evalation\n"
 #			fi
 
 printf "\nTCSF--------------------------------------------------- Finish.`date +%Y%m%d%H%M%S`\n\n"
-
-
-
