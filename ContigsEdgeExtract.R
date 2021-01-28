@@ -1,10 +1,12 @@
 ##
 ## ContigsEdgeExtract.R
 ##
-
 ## R script for Draft genome finishing
+
+chooseCRANmirror(graphics=FALSE, ind=49)
 if(!require(seqinr)) install.packages("seqinr")
 library(seqinr)
+
 
 args         <- commandArgs(trailingOnly=T)
 input.fasta  <- args[1]

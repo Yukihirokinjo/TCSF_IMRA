@@ -3,13 +3,15 @@
 # ver. 2.0
 #
 
+chooseCRANmirror(graphics=FALSE, ind=49)
+if(!require(seqinr)) install.packages("seqinr")
+library(seqinr)
+
+
 args      <- commandArgs(trailingOnly=T)
 OutDir    <- args[1]
 Ite       <- args[2]
 InContigs <- args[3]
-
-if(!require(seqinr)) install.packages("seqinr")
-library(seqinr)
 
 # Function definition: assembly statistics calculations
 NxCal <- function(Val,Seq){
