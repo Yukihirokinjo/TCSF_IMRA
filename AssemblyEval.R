@@ -8,6 +8,7 @@ OutDir    <- args[1]
 Ite       <- args[2]
 InContigs <- args[3]
 
+if(!require(seqinr)) install.packages("seqinr")
 library(seqinr)
 
 # Function definition: assembly statistics calculations

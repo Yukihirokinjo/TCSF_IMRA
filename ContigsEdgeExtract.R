@@ -3,7 +3,7 @@
 ##
 
 ## R script for Draft genome finishing
-
+if(!require(seqinr)) install.packages("seqinr")
 library(seqinr)
 
 args         <- commandArgs(trailingOnly=T)
