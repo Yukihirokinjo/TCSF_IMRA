@@ -598,6 +598,10 @@ spaMODE="--only-assembler"
 
   fi
 
+  ## delete intermediate reads
+  rm ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq
+  rm ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq
+
 ##---------------------------------------------------------------Assembly evaluation
   printf "\n-----------Cycle_${num} summary\n\n" 
 
