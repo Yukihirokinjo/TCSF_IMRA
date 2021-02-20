@@ -350,7 +350,7 @@ echo "## Run results:" >> ${out_dir}/Result.log
 # Get initial assembly status
 printf "\n\n-----------Initial status\n\n\n"
 
-R --vanilla --slave  ${out_dir} Initial ${ref_contigs}  < `which AssemblyEval.R`
+R --vanilla --slave --args ${out_dir} Initial ${ref_contigs}  < `which AssemblyEval.R`
 Error_Check AssemblyEval
 
 cat   ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log

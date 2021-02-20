@@ -460,7 +460,7 @@ seqtk subseq $in_contigs ${out_dir}/Contig_list/TCSF_list.txt > ${out_dir}/TCSF_
 printf  "\n ---------------------------- Run Evalation\n"
 
   
-  R --vanilla --slave  ${out_dir}  Initial  ${out_dir}/TCSF_contigs_${outName}.fna < `which AssemblyEval.R`
+  R --vanilla --slave --args ${out_dir}  Initial  ${out_dir}/TCSF_contigs_${outName}.fna < `which AssemblyEval.R`
   Error_Check  AssemblyEval
   
   cat ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
