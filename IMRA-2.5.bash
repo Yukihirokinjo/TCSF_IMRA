@@ -23,7 +23,7 @@ getseq() {
 
 Error_Check() {
     if [ "$?" -ne 0 ]; then
-      echo "[Error] $1 failed. Please check the Messages avobe" 1>&2
+      echo "[Error] $1 failed. Please check the Messages above" 1>&2
       exit 1
     fi
 }
