@@ -350,8 +350,8 @@ echo "## Run results:" >> ${out_dir}/Result.log
 # Get initial assembly status
 printf "\n\n-----------Initial status\n\n\n"
 
-R --vanilla --slave  `which AssemblyEval.R`  ${out_dir} Initial ${ref_contigs}
-Error_Check AssemblyEval.R
+R --vanilla --slave  ${out_dir} Initial ${ref_contigs}  < `which AssemblyEval.R`
+Error_Check AssemblyEval
 
 cat   ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
 
@@ -443,7 +443,7 @@ do
   else
 
     R --vanilla --slave --args $ref_contigs < `which ContigsEdgeExtract.R`  # >2nd iteration -> Contigs edge extraction
-    Error_Check ContigsEdgeExtract.R
+    Error_Check ContigsEdgeExtract
     cat tmp_ContigsEdge.fasta > ${out_dir}/Map/${num}/ContigsEdge_${num}.fasta
     rm  tmp_ContigsEdge.fasta
 
@@ -533,7 +533,7 @@ spaMODE="--only-assembler"
       echo "Converting read type"
       Illumina_New2Old.bash -i ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq -o ${out_dir}/Reads/old_selected_reads_F_${num}.fastq
       Illumina_New2Old.bash -i ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq -o ${out_dir}/Reads/old_selected_reads_R_${num}.fastq
-      Error_Check  Illumina_New2Old.bash
+      Error_Check  Illumina_New2Old
     fi
     if [ "$LargeComp" = "on" ]; then
       runAssembly \
@@ -623,7 +623,7 @@ spaMODE="--only-assembler"
   ref_contigs="${out_dir}/Assembly/${num}/IMRA-Contigs.fasta"
 
   R --vanilla --slave --args ${out_dir}  ${num}   <  `which AssemblyEval.R`  
-  Error_Check AssemblyEval.R
+  Error_Check AssemblyEval
 
   cat ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
   rm  ${out_dir}/tmp_Result.log
