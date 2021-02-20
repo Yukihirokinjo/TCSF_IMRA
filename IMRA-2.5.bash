@@ -3,7 +3,7 @@
 ##IMRA.bash
 #
 
-version="2.4"
+version="2.5"
 
 ##Functions
 
@@ -351,14 +351,17 @@ echo "## Run results:" >> ${out_dir}/Result.log
 printf "\n\n-----------Initial status\n\n\n"
 
 Rscript --vanilla --slave  `which AssemblyEval.R`  ${out_dir} Initial ${ref_contigs}
+Error_Check AssemblyEval.R
 
 cat   ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
 
 ## build reference INDEX and check Insert size
 bowtie2-build -f $ref_contigs ${out_dir}/Map/tmp_BT2 > ${out_dir}/EstInsSize/BT2build.log
+Error_Check bowtie2-build
 
 seqtk sample -s100 ${input_fastq_F} 0.1 > ${out_dir}/EstInsSize/tmp_subread_F.fastq
 seqtk sample -s100 ${input_fastq_R} 0.1 > ${out_dir}/EstInsSize/tmp_subread_R.fastq
+Error_Check seqtk
 
 if [ ${MapMode} == "sensitive" ]; then
   bowtie2 -x ${out_dir}/Map/tmp_BT2 -1 ${out_dir}/EstInsSize/tmp_subread_F.fastq  -2 ${out_dir}/EstInsSize/tmp_subread_R.fastq \
@@ -383,6 +386,7 @@ rm ${out_dir}/EstInsSize/tmp_subread_*.fastq
 grep -v "XS:" ${out_dir}/EstInsSize/subBT2.sam > ${out_dir}/EstInsSize/subBT2.unique.sam
 
 samtools stats ${out_dir}/EstInsSize/subBT2.unique.sam > ${out_dir}/EstInsSize/SamStat.txt
+Error_Check samtools
 grep ^SN ${out_dir}/EstInsSize/SamStat.txt  | cut -f 2-  > ${out_dir}/EstInsSize/SamStatSN.txt
 
 # Set library information (insert size, read length, etc.) 
@@ -428,24 +432,30 @@ do
       bowtie2 -x ${out_dir}/Map/tmp_BT2 -1 $input_fastq_F  -2 $input_fastq_R  \
         -S ${out_dir}/Map/${num}/ref.sam  -p ${cpu:=1} -I ${minInsSize} -X ${maxInsSize}   \
         --no-discordant --ignore-quals --very-fast  2> ${out_dir}/Map/${num}/BT2map.log    
+      Error_Check bowtie2
     else
       bowtie2 -x ${out_dir}/Map/tmp_BT2 -1 $input_fastq_F  -2 $input_fastq_R  \
         -S ${out_dir}/Map/${num}/ref.sam  -p ${cpu:=1} -I ${minInsSize} -X ${maxInsSize}   \
         --no-discordant  -5 ${TrimP} -3 ${TrimP} --ignore-quals \
         --score-min L,0,-0.05  -D 5 -R 1 -N 0 -L 30 -i S,0,2.5  2> ${out_dir}/Map/${num}/BT2map.log
+      Error_Check bowtie2
     fi
   else
 
     R --vanilla --slave --args $ref_contigs < `which ContigsEdgeExtract.R`  # >2nd iteration -> Contigs edge extraction
+    Error_Check ContigsEdgeExtract.R
     cat tmp_ContigsEdge.fasta > ${out_dir}/Map/${num}/ContigsEdge_${num}.fasta
     rm  tmp_ContigsEdge.fasta
 
     bowtie2-build -f ${out_dir}/Map/${num}/ContigsEdge_${num}.fasta ${out_dir}/Map/${num}/ref_BT2 \
                   > ${out_dir}/Map/${num}/BT2build.log
-      bowtie2 -x ${out_dir}/Map/${num}/ref_BT2 -1 $input_fastq_F  -2 $input_fastq_R  \
+    Error_Check bowtie2-build
+
+    bowtie2 -x ${out_dir}/Map/${num}/ref_BT2 -1 $input_fastq_F  -2 $input_fastq_R  \
         -S ${out_dir}/Map/${num}/ref.sam  -p ${cpu:=1} -I ${minInsSize} -X ${maxInsSize}    \
         --no-discordant  -5 ${TrimP} -3 ${TrimP} --ignore-quals \
         --score-min L,0,-0.05  -D 5 -R 1 -N 0 -L 30 -i S,0,2.5  2> ${out_dir}/Map/${num}/BT2map.log 
+    Error_Check bowtie2
   fi
 
   grep "overall alignment rate"  ${out_dir}/Map/${num}/BT2map.log
@@ -454,6 +464,7 @@ do
 # both correctly mapped: 194
 # one correctly mapped: 
   samtools view -S -F4  ${out_dir}/Map/${num}/ref.sam > ${out_dir}/Map/${num}/mapped.sam
+  Error_Check samtools
   cut -f1 ${out_dir}/Map/${num}/mapped.sam | sort | uniq > ${out_dir}/Map/${num}/mapped.list
 
   if [ ${num} = 1 ]; then
@@ -522,6 +533,7 @@ spaMODE="--only-assembler"
       echo "Converting read type"
       Illumina_New2Old.bash -i ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq -o ${out_dir}/Reads/old_selected_reads_F_${num}.fastq
       Illumina_New2Old.bash -i ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq -o ${out_dir}/Reads/old_selected_reads_R_${num}.fastq
+      Error_Check  Illumina_New2Old.bash
     fi
     if [ "$LargeComp" = "on" ]; then
       runAssembly \
@@ -539,6 +551,7 @@ spaMODE="--only-assembler"
         -p ${out_dir}/Reads/old_selected_reads_F_${num}.fastq \
         -p ${out_dir}/Reads/old_selected_reads_R_${num}.fastq
       Error_Check  Assembly
+
       cp ${out_dir}/Assembly/${num}/454ScaffoldContigs.fna  ${out_dir}/Assembly/${num}/IMRA-Contigs.fasta
       cp ${out_dir}/Assembly/${num}/454Scaffolds.fna  ${out_dir}/Assembly/${num}/IMRA-Scaffolds.fasta
     else
@@ -557,6 +570,7 @@ spaMODE="--only-assembler"
         -p ${out_dir}/Reads/old_selected_reads_F_${num}.fastq \
         -p ${out_dir}/Reads/old_selected_reads_R_${num}.fastq
       Error_Check  Assembly
+
       cp ${out_dir}/Assembly/${num}/454ScaffoldContigs.fna  ${out_dir}/Assembly/${num}/IMRA-Contigs.fasta
       cp ${out_dir}/Assembly/${num}/454Scaffolds.fna  ${out_dir}/Assembly/${num}/IMRA-Scaffolds.fasta
     fi
@@ -567,6 +581,7 @@ spaMODE="--only-assembler"
   elif [ "$IDBA" = "on" ]; then   # run IDBA-UD
 
     fq2fa --merge ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq ${out_dir}/Reads/${CASAVAtype}_selected_reads_${num}.fa
+    Error_Check  IDBA-UD_fq2fa
     idba_ud  -r ${out_dir}/Reads/${CASAVAtype}_selected_reads_${num}.fa -o ${out_dir}/Assembly/${num} \
              --mink ${mink:=21} --maxk ${maxk:=121} --step ${step:=20}  --num_threads ${cpu:=1} --similar 0.99 --min_contig ${largeC:=1000}
     Error_Check  IDBA-UD
@@ -592,7 +607,7 @@ spaMODE="--only-assembler"
 
     seqtk  subseq  ${out_dir}/Assembly/${num}/contigs.fasta  ${out_dir}/Assembly/${num}/IMRA-Contigs.list > ${out_dir}/Assembly/${num}/IMRA-Contigs.fasta
     seqtk  subseq  ${out_dir}/Assembly/${num}/scaffolds.fasta  ${out_dir}/Assembly/${num}/IMRA-Scaffolds.list > ${out_dir}/Assembly/${num}/IMRA-Scaffolds.fasta
-
+    Error_Check seqtk
     # delete intermediate
     rm -rf ${out_dir}/Assembly/${num}/K*
 
@@ -608,6 +623,7 @@ spaMODE="--only-assembler"
   ref_contigs="${out_dir}/Assembly/${num}/IMRA-Contigs.fasta"
 
   R --vanilla --slave --args ${out_dir}  ${num}   <  `which AssemblyEval.R`  
+  Error_Check AssemblyEval.R
 
   cat ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
   rm  ${out_dir}/tmp_Result.log
