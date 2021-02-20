@@ -351,7 +351,7 @@ echo "## Run results:" >> ${out_dir}/Result.log
 printf "\n\n-----------Initial status\n\n\n"
 
 R --vanilla --slave --args ${out_dir} Initial ${ref_contigs}  < `which AssemblyEval.R`
-Error_Check AssemblyEval
+Error_Check AssemblyEval.R
 
 cat   ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
 
@@ -443,7 +443,7 @@ do
   else
 
     R --vanilla --slave --args $ref_contigs < `which ContigsEdgeExtract.R`  # >2nd iteration -> Contigs edge extraction
-    Error_Check ContigsEdgeExtract
+    Error_Check ContigsEdgeExtract.R
     cat tmp_ContigsEdge.fasta > ${out_dir}/Map/${num}/ContigsEdge_${num}.fasta
     rm  tmp_ContigsEdge.fasta
 
@@ -623,7 +623,7 @@ spaMODE="--only-assembler"
   ref_contigs="${out_dir}/Assembly/${num}/IMRA-Contigs.fasta"
 
   R --vanilla --slave --args ${out_dir}  ${num}   <  `which AssemblyEval.R`  
-  Error_Check AssemblyEval
+  Error_Check AssemblyEval.R
 
   cat ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
   rm  ${out_dir}/tmp_Result.log

@@ -461,8 +461,8 @@ printf  "\n ---------------------------- Run Evalation\n"
 
   
   R --vanilla --slave --args ${out_dir}  Initial  ${out_dir}/TCSF_contigs_${outName}.fna < `which AssemblyEval.R`
-  Error_Check  AssemblyEval
-  
+  Error_Check  AssemblyEval.R
+
   cat ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
   rm  ${out_dir}/tmp_Result.log
 
