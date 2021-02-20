@@ -146,11 +146,11 @@ $ IMRA-2.5.bash  -ref ref_contigs.fasta -inF input_read_1.fastq -inR input_read_
 	-inR		<FILE>	Input read file (reverse).
 
 	Optional:
-	-spa		<flag>	Use SPAdes for iterative assembly (default: on).
+	-spa		<flag>	Use SPAdes for iterative assembly (default).
 
-	-idba		<flag>	Use IDBA-UD for iterative assembly (default: off).
+	-idba		<flag>	Use IDBA-UD for iterative assembly.
 
-	-454		<flag>	Use Newbler for iterative assembly (default: off).
+	-454		<flag>	Use Newbler for iterative assembly.
 
 	-sensitive	<flag>	Sensitive mode in the initial read mapping. This option is recommended if the reference contigs/scaffolds are derived from a genome of a closely related bacterial strain. 
 
