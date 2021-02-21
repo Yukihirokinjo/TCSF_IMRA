@@ -92,21 +92,7 @@ do
 					shift 2
 				elif [ -e "$2" ] || [ -d "$2" ]; then
 					echo "The specified output directory is already exist"
-						echo -n 'Overwrite ? [y/n]: '
-						read ans
-							case $ans in
-								y)
-									rm -r ./"$2"
-									;;
-								n)
-									printf "\nExit out of the IMRA\n\n" 
-									exit 1
-									;;
-								*)
-									echo "Press y(yes) or n(no)"
-									;;
-							esac
-							echo
+					exit 1
 				fi
 			fi
 			;;
