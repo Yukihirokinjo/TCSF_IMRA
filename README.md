@@ -59,7 +59,7 @@ $ chmod u+x *.R
 Thereafter, add the path to your PATH.  
 For example..
 ```
-$ echo 'export PATH=/path/to/TCSF_IMRA_dir/:$PATH' >> ~/.bashrc
+$ echo 'export PATH=/path/to/TCSF_IMRA_dir:$PATH' >> ~/.bashrc
 $ source ~/.bashrc
 ```
 
