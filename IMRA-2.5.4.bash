@@ -479,7 +479,7 @@ do
     awk ' {print $0 "/1" }' ${out_dir}/IDs/selected_ID_${num}.txt > ${out_dir}/IDs/selected_ID_F_${num}.txt
     awk ' {print $0 "/2" }' ${out_dir}/IDs/selected_ID_${num}.txt > ${out_dir}/IDs/selected_ID_R_${num}.txt
   fi
-    
+
   seqtk  subseq  $input_fastq_F  ${out_dir}/IDs/selected_ID_F_${num}.txt > ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq
   seqtk  subseq  $input_fastq_R  ${out_dir}/IDs/selected_ID_R_${num}.txt > ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq
   Error_Check seqtk
