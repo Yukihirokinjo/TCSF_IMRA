@@ -3,7 +3,7 @@
 ##IMRA.bash
 #
 
-version="2.5.3"
+version="2.5.4"
 
 ##Functions
 
@@ -467,8 +467,8 @@ do
   fi
 
   #Check read type 
-  CASAVA=$(grep -c "/[12]$" ${out_dir}/IDs/selected_ID_${num}.txt) 
-  if [ "${CASAVA}" == "0" ]; then
+  CASAVAold=$(head -n 1 $input_fastq_F  | awk '{print $1}' | grep -c "/1$")
+  if [ "${CASAVAold}" == "0" ]; then
     CASAVAtype="new"
     printf "\nread type: >= Casava ver. 1.8 \n"
     awk ' {print $0 }' ${out_dir}/IDs/selected_ID_${num}.txt > ${out_dir}/IDs/selected_ID_F_${num}.txt
