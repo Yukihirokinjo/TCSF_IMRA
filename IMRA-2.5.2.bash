@@ -3,7 +3,7 @@
 ##IMRA.bash
 #
 
-version="2.5.2"
+version="2.5.3"
 
 ##Functions
 
@@ -281,7 +281,7 @@ done
 
 [ -z "$input_fastq_F" ] && usage_exit
 
-[ -z "$input_fastq_F" ] && usage_exit
+[ -z "$input_fastq_R" ] && usage_exit
 
 [ -z "$MapMode" ] && MapMode="Accurate"
 
