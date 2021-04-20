@@ -1,17 +1,18 @@
 #
 # AssemblyEval.R
-# ver. 2.0
+# ver. 2.6
 #
-
-chooseCRANmirror(graphics=FALSE, ind=49)
-if(!require(seqinr)) install.packages("seqinr")
-library(seqinr)
-
 
 args      <- commandArgs(trailingOnly=T)
 OutDir    <- args[1]
 Ite       <- args[2]
 InContigs <- args[3]
+
+
+chooseCRANmirror(graphics=FALSE, ind=49)
+LibDir = paste(OutDir, "Rlib", sep="/")
+if(!require(seqinr)) install.packages("seqinr", lib=LibDir)
+library(seqinr)
 
 # Function definition: assembly statistics calculations
 NxCal <- function(Val,Seq){
@@ -43,7 +44,7 @@ if(Ite == "Initial"){
 
   write(Label, file = Outlog,  append = F)
 
-  ContI   <-read.fasta(InContigs, forceDNAtolower = F)
+  ContI   <- read.fasta(InContigs, forceDNAtolower = F)
   StatI   <- NxCal(50,ContI)
   numI    <- StatI[[1]]
   SumLenI <- StatI[[2]]
@@ -65,7 +66,7 @@ if(Ite == "Initial"){
 
   # Contigs
   ContigsL <-paste(OutDir, "Assembly", Ite, "IMRA-Contigs.fasta", sep="/")
-  ContL   <-read.fasta(ContigsL, forceDNAtolower = F)
+  ContL   <- read.fasta(ContigsL, forceDNAtolower = F)
   StatL   <- NxCal(50,ContL)
   numL    <- StatL[[1]]
   SumLenL <- StatL[[2]]

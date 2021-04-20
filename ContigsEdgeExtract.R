@@ -2,14 +2,18 @@
 ## ContigsEdgeExtract.R
 ##
 ## R script for Draft genome finishing
-
-chooseCRANmirror(graphics=FALSE, ind=49)
-if(!require(seqinr)) install.packages("seqinr")
-library(seqinr)
+#
+# ver. 2.6
 
 
 args         <- commandArgs(trailingOnly=T)
 input.fasta  <- args[1]
+LibDir       <- args[2]
+
+chooseCRANmirror(graphics=FALSE, ind=49)
+if(!require(seqinr)) install.packages("seqinr", lib=LibDir)
+library(seqinr)
+
 
 InCont<-read.fasta(input.fasta, forceDNAtolower = F)
 file.create("tmp_ContigsEdge.fasta")

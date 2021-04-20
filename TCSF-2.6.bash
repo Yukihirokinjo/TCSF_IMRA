@@ -3,7 +3,7 @@
 ##TCSF.bash
 #
 
-version="2.5.4"
+version="2.6"
 
 ##Functions
 
@@ -236,7 +236,7 @@ printf "\nTCSF--------------------------------------------------- START_`date +%
 
 mkdir -p ${out_dir}/DB/
 mkdir -p ${out_dir}/Contig_list/
-
+mkdir -p ${out_dir}/Rlib/
 
 cp $ref_B  ${out_dir}/DB/TCSF_DB.fna
 
@@ -460,7 +460,7 @@ seqtk subseq $in_contigs ${out_dir}/Contig_list/TCSF_list.txt > ${out_dir}/TCSF_
 printf  "\n ---------------------------- Run Evalation\n"
 
   
-  R --vanilla --slave --args ${out_dir}  Initial  ${out_dir}/TCSF_contigs_${outName}.fna < $(which AssemblyEval.R)
+  R --vanilla --slave --args ${out_dir} Initial  ${out_dir}/TCSF_contigs_${outName}.fna  < $(which AssemblyEval.R)
   Error_Check  AssemblyEval.R
 
   cat ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
