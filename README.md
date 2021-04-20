@@ -1,4 +1,4 @@
-#   TCSF and IMRA ver. 2.5.4
+#   TCSF and IMRA ver. 2.6
 
 
 ## 0. Introduction
@@ -82,28 +82,28 @@ As input read files for IMRA, Illumina paired-end reads are assumed.
 
 ##### [TCSF]
 ```
-$ TCSF-2.5.4.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta
+$ TCSF-2.6.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta
 ```
 
 For closely related genome (use blastn)
 ```
-$ TCSF-2.5.4.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta -blaN
+$ TCSF-2.6.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta -blaN
 ```
 
 
 ##### [IMRA]
 ```
-$ IMRA-2.5.4.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa
+$ IMRA-2.6.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa
 ```
 
 For >150bp reads
 ```
-$ IMRA-2.5.4.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -k 33,55,91,121
+$ IMRA-2.6.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -k 33,55,91,121
 ```
 
 For the use of reference contigs/scaffolds from a genome of closely related strain
 ```
-$ IMRA-2.5.4.bash  -ref ref_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -sensitive
+$ IMRA-2.6.bash  -ref ref_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -sensitive
 ```
 
 
