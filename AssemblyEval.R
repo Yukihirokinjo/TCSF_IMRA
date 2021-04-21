@@ -11,6 +11,7 @@ InContigs <- args[3]
 
 chooseCRANmirror(graphics=FALSE, ind=49)
 LibDir = paste(OutDir, "Rlib", sep="/")
+.libPaths(LibDir)
 if(!require(seqinr)) install.packages("seqinr", lib=LibDir)
 library(seqinr)
 
