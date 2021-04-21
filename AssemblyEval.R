@@ -7,12 +7,11 @@ args      <- commandArgs(trailingOnly=T)
 OutDir    <- args[1]
 Ite       <- args[2]
 InContigs <- args[3]
+LibDir    <- args[4]
 
-
-chooseCRANmirror(graphics=FALSE, ind=49)
-LibDir = paste(OutDir, "Rlib", sep="/")
+#chooseCRANmirror(graphics=FALSE, ind=49)
 .libPaths(LibDir)
-if(!require(seqinr)) install.packages("seqinr", lib=LibDir)
+#if(!require(seqinr)) install.packages("seqinr", lib=LibDir)
 library(seqinr)
 
 # Function definition: assembly statistics calculations

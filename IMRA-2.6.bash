@@ -5,6 +5,9 @@
 
 version="2.6"
 
+IMRApath=$(which IMRA-2.6.bash)
+Rlib=${IMRApath%/*}/Rlib
+
 ##Functions
 
 usage_exit() {
@@ -337,7 +340,7 @@ echo "## Run results:" >> ${out_dir}/Result.log
 # Get initial assembly status
 printf "\n\n-----------Initial status\n\n\n"
 
-R --vanilla --slave --args ${out_dir} Initial ${ref_contigs} < $(which AssemblyEval.R)
+R --vanilla --slave --args ${out_dir} Initial ${ref_contigs} ${Rlib} < $(which AssemblyEval.R)
 Error_Check AssemblyEval.R
 
 cat   ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
@@ -429,7 +432,7 @@ do
     fi
   else
 
-    R --vanilla --slave --args $ref_contigs ${out_dir}/Rlib < $(which ContigsEdgeExtract.R)  # >2nd iteration -> Contigs edge extraction
+    R --vanilla --slave --args $ref_contigs ${Rlib} < $(which ContigsEdgeExtract.R)  # >2nd iteration -> Contigs edge extraction
     Error_Check ContigsEdgeExtract.R
     cat tmp_ContigsEdge.fasta > ${out_dir}/Map/${num}/ContigsEdge_${num}.fasta
     rm  tmp_ContigsEdge.fasta
@@ -609,7 +612,7 @@ spaMODE="--only-assembler"
 
   ref_contigs="${out_dir}/Assembly/${num}/IMRA-Contigs.fasta"
 
-  R --vanilla --slave --args ${out_dir}  ${num}  <  $(which AssemblyEval.R)  
+  R --vanilla --slave --args ${out_dir}  ${num} ${out_dir}/Assembly/${num}/IMRA-Scaffolds.fasta ${Rlib} <  $(which AssemblyEval.R)  
   Error_Check AssemblyEval.R
 
   cat ${out_dir}/tmp_Result.log >> ${out_dir}/Result.log
