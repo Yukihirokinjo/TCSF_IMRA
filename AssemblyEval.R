@@ -1,6 +1,6 @@
 #
 # AssemblyEval.R
-# ver. 2.6
+# ver. 2.7
 #
 
 args      <- commandArgs(trailingOnly=T)
