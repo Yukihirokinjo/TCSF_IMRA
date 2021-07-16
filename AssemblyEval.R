@@ -10,8 +10,9 @@ InContigs <- args[3]
 LibDir    <- args[4]
 
 #chooseCRANmirror(graphics=FALSE, ind=49)
-.libPaths(LibDir)
-#if(!require(seqinr)) install.packages("seqinr", lib=LibDir)
+
+if(!require(seqinr)){.libPaths(LibDir)} 
+#install.packages("seqinr", lib=LibDir)
 library(seqinr)
 
 # Function definition: assembly statistics calculations
