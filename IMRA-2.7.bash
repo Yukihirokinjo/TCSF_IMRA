@@ -3,10 +3,13 @@
 ##IMRA.bash
 #
 
-version="2.6"
+version="2.7"
 
-IMRApath=$(which IMRA-2.6.bash)
-Rlib=${IMRApath%/*}/Rlib
+echo "Location of TCSF_IMRA: ${TCSF_IMRA}"
+[ -z "$in_contigs" ] && echo "[Error] The environment variable TCSF_IMRA is not set."
+exit 1
+
+Rlib=${TCSF_IMRA%/*}/Rlib
 
 ##Functions
 
@@ -307,7 +310,6 @@ mkdir -p ${out_dir}/IDs/
 mkdir -p ${out_dir}/Contigs/
 mkdir -p ${out_dir}/Map/
 mkdir -p ${out_dir}/EstInsSize/
-mkdir -p ${out_dir}/Rlib/
 
 printf  "\nIMRA--------------------------------------------------------Start.`date +%Y%m%d%H%M%S`\n"
 

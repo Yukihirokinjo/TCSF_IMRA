@@ -1,4 +1,4 @@
-#   TCSF and IMRA ver. 2.6
+#   TCSF and IMRA ver. 2.7
 
 
 ## 0. Introduction
@@ -48,7 +48,7 @@ TCSF and IMRA work on the Linux environment. We have tested following environmen
 No need to compile since TCSF and IMRA are bash wrapper scripts. Put them where you want to install them. 
 In the directory, change their permissions to be executable.
 
-```
+```bash
 git clone https://github.com/Yukihirokinjo/TCSF_IMRA.git
 cd TCSF_IMRA
 
@@ -56,10 +56,17 @@ $ chmod u+x *.bash
 $ chmod u+x *.R
 ```
 
-Thereafter, add the path to your PATH.  
+Thereafter, add the path to your `PATH`.  
 For example..
-```
+```bash
 $ echo 'export PATH=/path/to/TCSF_IMRA_dir:$PATH' >> ~/.bashrc
+```
+An environment variable `TCSF_IMRA` is need to be set as blow.
+```bash
+$ echo 'TCSF_IMRA==/path/to/TCSF_IMRA_dir' >> ~/.bashrc
+```
+Then, the settings above will be reflected on your current environment via `source` command.
+```bash
 $ source ~/.bashrc
 ```
 
@@ -81,29 +88,29 @@ As input read files for IMRA, Illumina paired-end reads are assumed.
 ### 3.2 Quick start
 
 ##### [TCSF]
-```
-$ TCSF-2.6.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta
+```bash
+$ TCSF-2.7.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta
 ```
 
 For closely related genome (use blastn)
-```
-$ TCSF-2.6.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta -blaN
+```bash
+$ TCSF-2.7.bash  -i input_contigs.fasta -refB reference_bacterial_genome.fasta -blaN
 ```
 
 
 ##### [IMRA]
-```
-$ IMRA-2.6.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa
+```bash
+$ IMRA-2.7.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa
 ```
 
 For >150bp reads
-```
-$ IMRA-2.6.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -k 33,55,91,121
+```bash
+$ IMRA-2.7.bash  -ref TCSF_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -k 33,55,91,121
 ```
 
 For the use of reference contigs/scaffolds from a genome of closely related strain
-```
-$ IMRA-2.6.bash  -ref ref_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -sensitive
+```bash
+$ IMRA-2.7.bash  -ref ref_contigs.fasta -inF input_read_1.fastq -inR input_read_2.fastq -spa -sensitive
 ```
 
 

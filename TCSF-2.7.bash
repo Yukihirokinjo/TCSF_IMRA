@@ -3,10 +3,13 @@
 ##TCSF.bash
 #
 
-version="2.6"
+version="2.7"
 
-IMRApath=$(which IMRA-2.6.bash)
-Rlib=${IMRApath%/*}/Rlib
+echo "Location of TCSF_IMRA: ${TCSF_IMRA}"
+[ -z "$in_contigs" ] && echo "[Error] The environment variable TCSF_IMRA is not set."
+exit 1
+
+Rlib=${TCSF_IMRA%/*}/Rlib
 
 ##Functions
 
@@ -239,7 +242,6 @@ printf "\nTCSF--------------------------------------------------- START_`date +%
 
 mkdir -p ${out_dir}/DB/
 mkdir -p ${out_dir}/Contig_list/
-mkdir -p ${out_dir}/Rlib/
 
 cp $ref_B  ${out_dir}/DB/TCSF_DB.fna
 
