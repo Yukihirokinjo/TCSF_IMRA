@@ -6,8 +6,7 @@
 version="2.7.1"
 
 echo "Location of TCSF_IMRA: ${TCSF_IMRA}"
-[ -z "${TCSF_IMRA}" ] && echo "[Error] The environment variable TCSF_IMRA is not set."
-exit 1
+[ -z "${TCSF_IMRA}" ] && echo "[Error] The environment variable TCSF_IMRA is not set." &&  exit 1
 
 Rlib=${TCSF_IMRA%/*}/Rlib
 
