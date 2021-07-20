@@ -3,10 +3,10 @@
 ##IMRA.bash
 #
 
-version="2.7"
+version="2.7.1"
 
 echo "Location of TCSF_IMRA: ${TCSF_IMRA}"
-[ -z "$in_contigs" ] && echo "[Error] The environment variable TCSF_IMRA is not set."
+[ -z "${TCSF_IMRA}" ] && echo "[Error] The environment variable TCSF_IMRA is not set."
 exit 1
 
 Rlib=${TCSF_IMRA%/*}/Rlib
