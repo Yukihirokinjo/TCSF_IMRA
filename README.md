@@ -63,7 +63,7 @@ $ echo 'export PATH=/path/to/TCSF_IMRA_dir:$PATH' >> ~/.bashrc
 ```
 An environment variable `TCSF_IMRA` is need to be set as blow.
 ```bash
-$ echo 'TCSF_IMRA=/path/to/TCSF_IMRA_dir' >> ~/.bashrc
+$ echo 'export TCSF_IMRA=/path/to/TCSF_IMRA_dir' >> ~/.bashrc
 ```
 Then, the settings above will be reflected on your current environment via `source` command.
 ```bash
