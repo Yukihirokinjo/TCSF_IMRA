@@ -3,7 +3,7 @@
 ##
 ## R script for Draft genome finishing
 #
-# ver. 2.7.1
+# ver. 2.7.2
 
 
 args         <- commandArgs(trailingOnly=T)
@@ -12,9 +12,9 @@ LibDir       <- args[2]
 
 #chooseCRANmirror(graphics=FALSE, ind=49)
 
-if(!require(seqinr)){.libPaths(LibDir)} 
+#if(!require(seqinr)){.libPaths(LibDir)} 
 #install.packages("seqinr", lib=LibDir)
-library(seqinr)
+library(seqinr, lib.loc = LibDir)
 
 
 InCont<-read.fasta(input.fasta, forceDNAtolower = F)
