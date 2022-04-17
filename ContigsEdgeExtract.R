@@ -3,7 +3,7 @@
 ##
 ## R script for Draft genome finishing
 #
-# ver. 2.7.2
+# ver. 2.7.3
 
 
 args         <- commandArgs(trailingOnly=T)
