@@ -3,7 +3,7 @@
 ##TCSF.bash
 #
 
-version="2.7.3"
+version="2.8.0"
 
 echo "Location of TCSF_IMRA: ${TCSF_IMRA}"
 [ -z "${TCSF_IMRA}" ] && echo "[Error] The environment variable TCSF_IMRA is not set." && exit 1

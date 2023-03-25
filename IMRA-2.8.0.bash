@@ -3,7 +3,7 @@
 ##IMRA.bash
 #
 
-version="2.7.3" 
+version="2.8.0" 
 
 echo "Location of TCSF_IMRA: ${TCSF_IMRA}"
 [ -z "${TCSF_IMRA}" ] && echo "[Error] The environment variable TCSF_IMRA is not set." &&  exit 1
@@ -143,20 +143,20 @@ do
 				fi
 			fi
 			;;
-                '-e')
-                        if [ -z "$2" ]; then
-                                echo "PROGRAM: option requires an argument $1" 1>&2
-                                exit 1
-                        else
-                                if  [ `expr "$2" : "[0-9]*$"` -gt 0  ]; then
-                                        Edepth="$2"
-                                        shift 2
-                                else
-                                        echo " Argument with option $1 should be an integer " 1>&2
-                                        exit 1
-                                fi
-                        fi
-                        ;;
+		'-e')
+			if [ -z "$2" ]; then
+					echo "PROGRAM: option requires an argument $1" 1>&2
+					exit 1
+			else
+					if  [ `expr "$2" : "[0-9]*$"` -gt 0  ]; then
+							Edepth="$2"
+							shift 2
+					else
+							echo " Argument with option $1 should be an integer " 1>&2
+							exit 1
+					fi
+			fi
+			;;
 		'-slA')
 			if [ -z "$2" ]; then
 				echo "PROGRAM: option requires an argument $1" 1>&2
@@ -265,15 +265,19 @@ do
 			MapMode="sensitive"
 			shift 1
 			;;
-                '-k')
-                        if [ -z "$2" ]; then
-                                echo "PROGRAM: option requires an argument $1" 1>&2
-                                exit 1
-                        else
-                                Kmers="$2"
-                                shift 2
-                        fi
-                        ;;
+		'-careful')
+			spaMode="--careful"
+			shift 1
+			;;
+		'-k')
+			if [ -z "$2" ]; then
+					echo "PROGRAM: option requires an argument $1" 1>&2
+					exit 1
+			else
+					Kmers="$2"
+					shift 2
+			fi
+			;;
 		*)
 		echo "Invalid option $1 " 1>&2
 		usage_exit
@@ -288,17 +292,17 @@ done
 
 [ -z "$input_fastq_R" ] && usage_exit
 
+#set default mode
 [ -z "$MapMode" ] && MapMode="Accurate"
 
-#Set default output directory
+[ -z "$spaMode" ] && spaMode="--only-assembler"
+#spaMode="--careful"
 
+#Set default output directory
 [ -z "$out_dir" ] && out_dir="IMRA_OUT_`date +%Y%m%d`_`date +%H%M`"
 
 #Set Assembler (default: SPAdes)
-
-if [ "$Newbler" = "on" ]; then
-  Assembler=Newbler
-elif [ "$IDBA" = "on" ]; then
+if [ "$IDBA" = "on" ]; then
   Assembler=IDBA-UD
 else
   Assembler=SPAdes
@@ -515,61 +519,8 @@ do
   printf "## Large Contig Threshold = ${largeC} \n\n\n"
 
 ##---------------------------------------------------------------Assembly
-spaMODE="--only-assembler"
-#spaMODE="--careful"
 
-  if [ "$Newbler" = "on" ]; then    # run Newbler
-
-    if [ "${CASAVAtype}" == "new" ]; then
-      echo "Converting read type"
-      Illumina_New2Old.bash -i ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq -o ${out_dir}/Reads/old_selected_reads_F_${num}.fastq
-      Illumina_New2Old.bash -i ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq -o ${out_dir}/Reads/old_selected_reads_R_${num}.fastq
-      Error_Check  Illumina_New2Old
-    fi
-    if [ "$LargeComp" = "on" ]; then
-      runAssembly \
-        -large \
-        -scaffold -noace -force \
-        -l      ${largeC:=500} \
-        -e      ${Edepth:=0} \
-        -cpu    ${cpu:=1} \
-        -sl	${sl_A:=16} \
-        -ss	${ss_A:=12} \
-        -sc	${sc_A:=1} \
-        -mi     ${min_id_A:=90} \
-        -ml     ${min_ol_A:=40} \
-        -o ${out_dir}/Assembly/${num} \
-        -p ${out_dir}/Reads/old_selected_reads_F_${num}.fastq \
-        -p ${out_dir}/Reads/old_selected_reads_R_${num}.fastq
-      Error_Check  Assembly
-
-      cp ${out_dir}/Assembly/${num}/454ScaffoldContigs.fna  ${out_dir}/Assembly/${num}/IMRA-Contigs.fasta
-      cp ${out_dir}/Assembly/${num}/454Scaffolds.fna  ${out_dir}/Assembly/${num}/IMRA-Scaffolds.fasta
-    else
-  # run Newbler
-      runAssembly \
-        -scaffold -noace -force \
-        -l      ${largeC:=500} \
-        -e      ${Edepth:=0} \
-        -cpu    ${cpu:=1} \
-        -sl	${sl_A:=16} \
-        -ss	${ss_A:=12} \
-        -sc	${sc_A:=1} \
-        -mi     ${min_id_A:=90} \
-        -ml     ${min_ol_A:=40} \
-        -o ${out_dir}/Assembly/${num} \
-        -p ${out_dir}/Reads/old_selected_reads_F_${num}.fastq \
-        -p ${out_dir}/Reads/old_selected_reads_R_${num}.fastq
-      Error_Check  Assembly
-
-      cp ${out_dir}/Assembly/${num}/454ScaffoldContigs.fna  ${out_dir}/Assembly/${num}/IMRA-Contigs.fasta
-      cp ${out_dir}/Assembly/${num}/454Scaffolds.fna  ${out_dir}/Assembly/${num}/IMRA-Scaffolds.fasta
-    fi
-    if [ -z $info_A ]; then
-	rm ${out_dir}/Assembly/${num}/454*Status.txt
-    fi
-
-  elif [ "$IDBA" = "on" ]; then   # run IDBA-UD
+  if [ "$IDBA" = "on" ]; then   # run IDBA-UD
 
     fq2fa --merge ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq ${out_dir}/Reads/${CASAVAtype}_selected_reads_${num}.fa
     Error_Check  IDBA-UD_fq2fa
@@ -584,7 +535,7 @@ spaMODE="--only-assembler"
 
     spades.py -1 ${out_dir}/Reads/${CASAVAtype}_selected_reads_F_${num}.fastq \
               -2 ${out_dir}/Reads/${CASAVAtype}_selected_reads_R_${num}.fastq \
-              ${spaMODE} -o ${out_dir}/Assembly/${num} -t ${cpu:=1} -k ${Kmers:=33,55,77,91}  > ${out_dir}/Assembly/${num}/spades.log
+              ${spaMode} -o ${out_dir}/Assembly/${num} -t ${cpu:=1} -k ${Kmers:=33,55,77,91}  > ${out_dir}/Assembly/${num}/spades.log
     Error_Check  Spades
 
     # filter out short contigs
